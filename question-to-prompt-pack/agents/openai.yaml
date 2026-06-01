@@ -1,6 +1,6 @@
 interface:
   display_name: "Question to Prompt Pack"
-  short_description: "Frame rough questions before prompting."
-  default_prompt: "Use $question-to-prompt-pack to turn my rough question into a collaboration frame, then generate a final prompt."
+  short_description: "Frame rough questions, then route to the right skill."
+  default_prompt: "Use $question-to-prompt-pack to understand my rough question, generate a concise prompt pack, then choose the best skill to execute it."
 policy:
   allow_implicit_invocation: true

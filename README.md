@@ -1,8 +1,8 @@
 # Question to Prompt Pack
 
-> Turn rough questions into concise collaboration frames and copyable prompts.
+> One unified entry point: understand a rough question, generate a concise prompt pack, then route the task to the right Codex skill.
 
-Question to Prompt Pack is a Codex skill for improving user-AI communication. It does not simply make prompts longer. It helps an AI quickly decide whether to answer directly, ask a clarifying question, show a compact collaboration frame, or generate a full prompt pack.
+Question to Prompt Pack is a Codex skill for improving user-AI communication. It does not simply make prompts longer. It helps an AI quickly decide whether to answer directly, ask a clarifying question, show a compact collaboration frame, generate a full prompt pack, or route the task to the best skill for execution.
 
 中文说明见 [README.zh-CN.md](README.zh-CN.md).
 
@@ -14,11 +14,22 @@ Many prompt tools over-expand simple requests. This skill is designed around one
 Use the smallest frame that prevents misunderstanding.
 ```
 
+Unified chain:
+
+```text
+rough user question
+-> question-to-prompt-pack aligns intent
+-> built-in skill routing selects a skill
+-> selected skill executes the task
+-> feedback updates prompt/routing preference
+```
+
 It helps with:
 
 - turning plain-language questions into structured prompts
 - avoiding overthinking and token waste
 - showing a concise, user-editable interpretation before execution
+- deciding which Codex skill should execute the task
 - preserving the user's natural style
 - adapting to thread-level preferences through lightweight feedback
 
@@ -28,6 +39,7 @@ It helps with:
 - `Compact Frame`: when the user wants to inspect the AI's understanding
 - `Full Frame`: when the task is complex or needs assumptions and quality criteria
 - `Training Frame`: when the user wants coaching on how to ask better
+- `Skill Route`: when a specialized skill should execute the framed task
 - `Direct Execution`: when the user says to just do the task
 
 ## Example
@@ -50,6 +62,12 @@ I understand this as:
 
 Draft prompt:
 Help me plan tomorrow with time blocks, top 3 priorities, realistic breaks, and a fallback version if the day gets busy. Ask up to 3 questions first only if needed.
+
+Route:
+- Task type: planning
+- Best skill: none
+- Confidence: high
+- Next action: answer directly
 
 Say "expand" if you want the full collaboration frame.
 ```
@@ -89,9 +107,25 @@ question-to-prompt-pack/
     golden-examples.md
     interactive-workflow.md
     prompt-pack-patterns.md
+    skill-routing.md
     test-cases.md
   scripts/
+    build_local_index.py
     check_skill_rules.py
+    discover_skill_metadata.py
+    eval_routes.py
+    search_skill_index.py
+```
+
+## Usage
+
+Use it as the only front door:
+
+```text
+Use $question-to-prompt-pack:
+Understand my rough request, generate a concise prompt pack, choose the best skill, and give the minimum execution plan.
+
+I want to build a personal research productivity MVP.
 ```
 
 ## License

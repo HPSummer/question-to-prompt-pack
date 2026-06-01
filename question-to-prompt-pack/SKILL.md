@@ -1,13 +1,13 @@
 ---
 name: question-to-prompt-pack
-description: "Convert a user's natural-language question into a collaboration frame and prompt pack. Use when the user wants their rough question transformed into a clearer communication structure, wants to inspect and adjust the AI's understanding before execution, or wants prompts that improve user-AI communication efficiency and preserve the user's style."
+description: "Unified entry skill that converts a user's natural-language question into a collaboration frame and prompt pack, then routes the framed task to the best available Codex skill with minimal token use. Use when the user wants their rough question transformed into a clearer communication structure, wants to inspect and adjust the AI's understanding before execution, wants automatic skill selection after question framing, or wants prompts that improve user-AI communication efficiency while preserving the user's style."
 ---
 
 # Question To Prompt Pack
 
 ## Purpose
 
-Use this skill as a communication alignment layer: convert a rough user question into the smallest useful frame, then generate a copyable prompt or proceed with execution.
+Use this skill as the single user-facing entry point: convert a rough user question into the smallest useful frame, then decide whether to answer directly, generate a copyable prompt, route to the best available skill, or proceed with execution.
 
 Default behavior: save tokens, avoid overthinking, preserve the user's natural style.
 
@@ -17,8 +17,39 @@ Default behavior: save tokens, avoid overthinking, preserve the user's natural s
 2. Estimate understanding confidence.
 3. Apply hard trigger rules.
 4. Choose the smallest frame that prevents misunderstanding.
-5. Generate one prompt or execute directly.
-6. Use feedback only when calibrating, testing, or correcting.
+5. Generate one prompt pack when useful.
+6. Route the framed task to a skill only when execution needs a specialized workflow.
+7. Load the selected skill only after routing confidence is sufficient.
+8. Use feedback only when calibrating, testing, or correcting.
+
+## Unified Pipeline
+
+Use this internal chain when the user asks for help completing a task:
+
+```text
+rough question -> tiny/compact intent frame -> prompt pack -> skill route -> selected skill execution -> feedback
+```
+
+Default unified output:
+
+```text
+I understand this as:
+- Goal:
+- Missing/assumed context:
+- Best output:
+- Mode:
+
+Prompt pack:
+{one concise prompt}
+
+Route:
+- Task type:
+- Best skill:
+- Confidence:
+- Next action:
+```
+
+Keep the route under 5 lines. If confidence is high, proceed by loading only the selected skill. If confidence is medium, show 2-3 candidates and recommend one. If confidence is low, ask one clarification question.
 
 ## Understanding Confidence
 
@@ -38,6 +69,8 @@ Do not display confidence unless useful.
 | save tokens / short / quick | Tiny Frame only |
 | turn this into a prompt | Tiny Frame + one draft prompt |
 | show framing / show understanding / let me adjust | Compact or Full |
+| choose skill / route / workflow / which tool | Tiny Frame + Route |
+| complete this task / help me do X | Tiny Frame + Route unless direct answer is enough |
 | train my questioning / score / teach me how to ask | Training |
 | high-stakes or freshness-sensitive | Compact with verification |
 | coding implementation | Execute and validate unless ambiguity blocks |
@@ -92,9 +125,35 @@ Use these fields when the user wants to inspect or adjust understanding:
 - `Answer Directly`
 - `Clarify First`
 - `Plan First`
+- `Route Skill`
 - `Implement`
 - `Verify`
 - `Iterate`
+
+## Skill Routing
+
+Route from compact metadata first. Do not load every `SKILL.md`.
+
+Use `scripts/build_local_index.py` to build a local compact skill index when needed. Use `scripts/search_skill_index.py` to route a framed task from that index. Use the current session skill list first when it is already available.
+
+Tiny route:
+
+```text
+Route:
+- Task type:
+- Best skill:
+- Why:
+- Confidence:
+- Next action:
+```
+
+Routing rules:
+
+- High confidence: choose one skill and proceed.
+- Medium confidence: show 2-3 candidates and recommend one.
+- Low confidence: ask one clarification question or answer directly if no skill is needed.
+- Never auto-install or execute untrusted GitHub skills.
+- GitHub discovery is metadata-only review; it is not a permission to install or run remote code.
 
 ## Feedback Loop
 
@@ -138,6 +197,8 @@ Do not claim long-term memory unless persistent storage exists and the user requ
 - Do not expose hidden chain-of-thought; show concise user-facing framing only.
 - Do not invent preferences from one message unless marked as assumptions.
 - Ask at most 3 clarifying questions.
+- Do not over-route simple questions that can be answered directly.
+- Do not load more than one full skill by default.
 - Add verification for current, technical, legal, medical, financial, or research claims.
 - For coding tasks, include artifacts and validation.
 - For creative/video tasks, include audience, message, format, style, script/structure, and publishing constraints.
@@ -148,3 +209,4 @@ Do not claim long-term memory unless persistent storage exists and the user requ
 - `references/interactive-workflow.md`: user adjustments, habit updates, feedback menu.
 - `references/prompt-pack-patterns.md`: full prompt pack patterns and domain adaptors.
 - `references/golden-examples.md`: style anchors for validation/debugging only.
+- `references/skill-routing.md`: routing policy, trust model, and discovery workflow.
