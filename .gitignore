@@ -4,3 +4,4 @@ __pycache__/
 Thumbs.db
 .idea/
 .vscode/
+.question-to-prompt-pack/

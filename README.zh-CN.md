@@ -30,6 +30,8 @@ English version: [README.md](README.md)
 - 避免过度思考和 token 浪费
 - 在执行前展示一个可编辑的理解框架
 - 判断这件事应该调用哪个 skill
+- 用一句可复用模式训练用户下次怎么问
+- 用本地 profile 保留非敏感协作偏好
 - 保留用户原本的大白话风格
 - 根据用户反馈形成当前线程的工作偏好
 
@@ -41,6 +43,25 @@ English version: [README.md](README.md)
 - `Training Frame`：用户想训练提问能力时使用
 - `Skill Route`：需要执行复杂任务时，选择最合适的 skill
 - `Direct Execution`：用户明确说“直接做”时跳过框架
+
+## 提问训练闭环
+
+当用户想提升提问能力，或某个问题明显缺少关键上下文时，输出一个很短的训练块：
+
+```text
+提问升级：
+- 缺失信息：
+- 为什么重要：
+- 下次复用模板：
+```
+
+默认模板：
+
+```text
+目标 + 背景 + 输出格式 + 约束 + 执行模式
+```
+
+普通执行请求不会强行教学，避免浪费 token。
 
 ## 示例
 
@@ -107,14 +128,22 @@ question-to-prompt-pack/
     golden-examples.md
     interactive-workflow.md
     prompt-pack-patterns.md
+    question-coaching.md
     skill-routing.md
     test-cases.md
+    user-style-profile.md
+  assets/
+    user-style-profile.schema.json
   scripts/
     build_local_index.py
     check_skill_rules.py
     discover_skill_metadata.py
     eval_routes.py
+    profile_manager.py
     search_skill_index.py
+    validate_unified_cases.py
+benchmarks/
+  unified-cases.jsonl
 ```
 
 ## 使用建议
@@ -147,6 +176,18 @@ question-to-prompt-pack/
 先理解我的需求，再判断应该调用哪个 skill，最后给出最小执行方案。
 
 我想做一个个人科研效率工具 MVP。
+```
+
+初始化本地用户风格 profile：
+
+```powershell
+python .\question-to-prompt-pack\scripts\profile_manager.py --init --validate
+```
+
+验证统一链路 benchmark：
+
+```powershell
+python .\question-to-prompt-pack\scripts\validate_unified_cases.py --cases .\benchmarks\unified-cases.jsonl
 ```
 
 ## 许可证

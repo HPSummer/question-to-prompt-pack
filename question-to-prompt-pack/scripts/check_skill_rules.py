@@ -14,6 +14,8 @@ REQUIRED = {
         "Tiny Frame",
         "Unified Pipeline",
         "Skill Routing",
+        "Question Coaching Loop",
+        "Persistent Profile",
         "Feedback Loop",
         "Habit Profile",
         "Do not expose hidden chain-of-thought",
@@ -35,6 +37,16 @@ REQUIRED = {
         "GitHub Discovery",
         "never auto-install",
     ],
+    "references/question-coaching.md": [
+        "Question Coaching Loop",
+        "Reusable Patterns",
+        "Training Mode",
+    ],
+    "references/user-style-profile.md": [
+        "User Style Profile",
+        "Profile Location",
+        "Update Rules",
+    ],
 }
 
 REQUIRED_SCRIPTS = [
@@ -42,6 +54,12 @@ REQUIRED_SCRIPTS = [
     "search_skill_index.py",
     "discover_skill_metadata.py",
     "eval_routes.py",
+    "profile_manager.py",
+    "validate_unified_cases.py",
+]
+
+REQUIRED_ASSETS = [
+    "assets/user-style-profile.schema.json",
 ]
 
 
@@ -63,6 +81,9 @@ def main() -> int:
     for script in REQUIRED_SCRIPTS:
         if not (ROOT / "scripts" / script).exists():
             missing.append(f"scripts/{script}: file missing")
+    for asset in REQUIRED_ASSETS:
+        if not (ROOT / asset).exists():
+            missing.append(f"{asset}: file missing")
 
     if missing:
         print("Rule check failed:")

@@ -1,0 +1,59 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Question to Prompt Pack User Style Profile",
+  "type": "object",
+  "additionalProperties": false,
+  "properties": {
+    "version": {
+      "type": "string",
+      "default": "1.0"
+    },
+    "language": {
+      "type": "string",
+      "examples": ["zh-CN", "en-US"]
+    },
+    "tone": {
+      "type": "string",
+      "examples": ["concise", "technical", "direct"]
+    },
+    "answer_structure": {
+      "type": "string",
+      "examples": ["tiny-frame-first", "bullets", "tables"]
+    },
+    "depth": {
+      "type": "string",
+      "enum": ["tiny", "normal", "deep", "training"]
+    },
+    "default_frame": {
+      "type": "string",
+      "enum": ["tiny", "compact", "full", "direct"]
+    },
+    "common_domains": {
+      "type": "array",
+      "items": { "type": "string" },
+      "uniqueItems": true
+    },
+    "recurring_constraints": {
+      "type": "array",
+      "items": { "type": "string" },
+      "uniqueItems": true
+    },
+    "verification_level": {
+      "type": "string",
+      "enum": ["low", "normal", "high"]
+    },
+    "dislikes": {
+      "type": "array",
+      "items": { "type": "string" },
+      "uniqueItems": true
+    },
+    "routing_preference": {
+      "type": "object",
+      "additionalProperties": { "type": "string" }
+    },
+    "updated_at": {
+      "type": "string",
+      "format": "date-time"
+    }
+  }
+}

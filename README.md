@@ -30,6 +30,8 @@ It helps with:
 - avoiding overthinking and token waste
 - showing a concise, user-editable interpretation before execution
 - deciding which Codex skill should execute the task
+- teaching one reusable questioning pattern when useful
+- preserving non-sensitive collaboration preferences in a local profile
 - preserving the user's natural style
 - adapting to thread-level preferences through lightweight feedback
 
@@ -41,6 +43,25 @@ It helps with:
 - `Training Frame`: when the user wants coaching on how to ask better
 - `Skill Route`: when a specialized skill should execute the framed task
 - `Direct Execution`: when the user says to just do the task
+
+## Question Coaching Loop
+
+When the user wants to improve questioning ability, or when a request is missing a high-leverage detail, add a tiny coaching block:
+
+```text
+Question upgrade:
+- Missing piece:
+- Why it matters:
+- Reusable pattern:
+```
+
+Default pattern:
+
+```text
+Goal + context + output format + constraints + execution mode
+```
+
+Do not force coaching into ordinary execution requests.
 
 ## Example
 
@@ -107,14 +128,22 @@ question-to-prompt-pack/
     golden-examples.md
     interactive-workflow.md
     prompt-pack-patterns.md
+    question-coaching.md
     skill-routing.md
     test-cases.md
+    user-style-profile.md
+  assets/
+    user-style-profile.schema.json
   scripts/
     build_local_index.py
     check_skill_rules.py
     discover_skill_metadata.py
     eval_routes.py
+    profile_manager.py
     search_skill_index.py
+    validate_unified_cases.py
+benchmarks/
+  unified-cases.jsonl
 ```
 
 ## Usage
@@ -126,6 +155,18 @@ Use $question-to-prompt-pack:
 Understand my rough request, generate a concise prompt pack, choose the best skill, and give the minimum execution plan.
 
 I want to build a personal research productivity MVP.
+```
+
+Initialize a local user style profile:
+
+```powershell
+python .\question-to-prompt-pack\scripts\profile_manager.py --init --validate
+```
+
+Validate the unified benchmark:
+
+```powershell
+python .\question-to-prompt-pack\scripts\validate_unified_cases.py --cases .\benchmarks\unified-cases.jsonl
 ```
 
 ## License

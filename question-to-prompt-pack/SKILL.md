@@ -85,6 +85,16 @@ Follow explicit user instruction first unless safety, verification, or missing c
 - `Full`: compact + assumptions + adjustment menu + quality criteria.
 - `Training`: full + score + feedback + next exercise.
 
+## Output Modes
+
+Use the smallest mode that fits the user's intent:
+
+- `tiny`: frame + one prompt + route only when needed.
+- `normal`: tiny + one question upgrade tip.
+- `training`: normal + diagnosis + one practice exercise.
+
+Do not use `training` unless the user asks to improve questioning ability, asks for feedback, or requests scoring/coaching.
+
 Tiny limits:
 - one draft prompt only
 - no scorecard
@@ -167,6 +177,27 @@ Use only during testing, calibration, or correction:
 
 Do not ask for feedback after every response.
 
+## Question Coaching Loop
+
+Use only when the user wants to improve questioning ability or when one short tip would materially improve repeat use.
+
+Compact coaching block:
+
+```text
+Question upgrade:
+- Missing piece:
+- Why it matters:
+- Reusable pattern:
+```
+
+Default reusable pattern:
+
+```text
+Goal + context + output format + constraints + execution mode
+```
+
+Never turn ordinary execution requests into long coaching. See `references/question-coaching.md` for training mode.
+
 ## Habit Profile
 
 Track only non-sensitive, useful thread-level preferences:
@@ -192,6 +223,16 @@ Lifecycle:
 
 Do not claim long-term memory unless persistent storage exists and the user requests it.
 
+## Persistent Profile
+
+If the user explicitly asks to remember preferences across sessions, use a project-local profile rather than hidden memory:
+
+```text
+.question-to-prompt-pack/user-style-profile.json
+```
+
+Use `assets/user-style-profile.schema.json` as the schema. Store only non-sensitive collaboration preferences. See `references/user-style-profile.md`.
+
 ## Guardrails
 
 - Do not expose hidden chain-of-thought; show concise user-facing framing only.
@@ -210,3 +251,5 @@ Do not claim long-term memory unless persistent storage exists and the user requ
 - `references/prompt-pack-patterns.md`: full prompt pack patterns and domain adaptors.
 - `references/golden-examples.md`: style anchors for validation/debugging only.
 - `references/skill-routing.md`: routing policy, trust model, and discovery workflow.
+- `references/question-coaching.md`: reusable question-improvement patterns.
+- `references/user-style-profile.md`: persistent non-sensitive style profile rules.
