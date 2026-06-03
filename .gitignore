@@ -5,3 +5,6 @@ Thumbs.db
 .idea/
 .vscode/
 .question-to-prompt-pack/
+skill-index.json
+skill-index.review.json
+*.review.json

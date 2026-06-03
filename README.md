@@ -179,6 +179,26 @@ python .\question-to-prompt-pack\scripts\validate_unified_cases.py --cases .\ben
 
 The benchmark currently includes 50 realistic user-style requests across research, coding, writing, PDF/data, image, video, automation, decision-making, and ambiguous inputs.
 
+## Skill Discovery and Routing
+
+Default routing order:
+
+```text
+installed local skills
+-> local discovery cache
+-> first-run GitHub metadata-only discovery
+-> user review/install guidance
+-> later route from local/cache
+```
+
+First-run discovery for a new task category:
+
+```powershell
+python .\question-to-prompt-pack\scripts\route_with_discovery.py "build a React dashboard" --local-index skill-index.json --discover
+```
+
+Discovery reads only GitHub `SKILL.md` metadata. It does not auto-install or execute remote code. After the user approves and installs a skill, later requests use the local index or `.question-to-prompt-pack/skill-discovery-cache.json` instead of repeatedly searching GitHub.
+
 ## License
 
 MIT. See [LICENSE](LICENSE).

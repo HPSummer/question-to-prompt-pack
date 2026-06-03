@@ -197,6 +197,26 @@ python .\question-to-prompt-pack\scripts\validate_unified_cases.py --cases .\ben
 
 当前 benchmark 包含 50 条真实用户风格问题，覆盖科研、代码、写作、PDF、图像、视频、自动化、决策和模糊输入。
 
+## Skill 发现与调用
+
+默认路由顺序：
+
+```text
+本地已安装 skills
+-> 本地 discovery cache
+-> 首次 GitHub metadata-only 发现
+-> 引导用户审查/安装
+-> 后续直接用本地或缓存索引路由
+```
+
+首次发现新类型 skill：
+
+```powershell
+python .\question-to-prompt-pack\scripts\route_with_discovery.py "build a React dashboard" --local-index skill-index.json --discover
+```
+
+发现流程只读取 GitHub 上的 `SKILL.md` metadata，不会自动安装，也不会执行远程代码。用户批准并安装后，后续同类任务优先走本地索引或 `.question-to-prompt-pack/skill-discovery-cache.json`，不需要反复搜索 GitHub。
+
 ## 许可证
 
 MIT。见 [LICENSE](LICENSE)。

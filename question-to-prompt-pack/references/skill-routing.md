@@ -62,6 +62,28 @@ Rules:
 - Use multiple skills only when the task clearly has independent phases.
 - If no suitable skill is found, answer directly or ask one clarification question.
 
+## First-Run Discovery
+
+When the local skill index cannot route a task with at least medium confidence, use this staged policy:
+
+```text
+1. Search installed local skills.
+2. Search .question-to-prompt-pack/skill-discovery-cache.json.
+3. If still weak, ask/confirm that GitHub metadata discovery is allowed.
+4. Scan only user-approved GitHub repositories for SKILL.md metadata.
+5. Cache review records locally.
+6. Recommend candidate skills and installation/review steps.
+7. After installation or approval, route from local/cache without repeating GitHub discovery.
+```
+
+Use `scripts/route_with_discovery.py` for this combined flow:
+
+```powershell
+python .\question-to-prompt-pack\scripts\route_with_discovery.py "build a React dashboard" --local-index skill-index.json --discover
+```
+
+Do not install or execute discovered skills automatically. A discovered record is a candidate, not trust.
+
 ## GitHub Discovery
 
 Discovery updates an index. It must not auto-install or auto-run skills.
@@ -83,6 +105,7 @@ Commands:
 ```powershell
 python .\question-to-prompt-pack\scripts\discover_skill_metadata.py --repo https://github.com/openai/skills --out skill-index.review.json
 python .\question-to-prompt-pack\scripts\discover_skill_metadata.py --path .\some-skills-repo --out skill-index.review.json
+python .\question-to-prompt-pack\scripts\route_with_discovery.py "my task" --local-index skill-index.json --discover
 ```
 
 Use discovery summaries only. Do not paste large search results into chat.

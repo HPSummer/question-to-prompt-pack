@@ -16,6 +16,7 @@ REQUIRED = {
         "Skill Routing",
         "Question Coaching Loop",
         "Persistent Profile",
+        "first-run discovery",
         "Feedback Loop",
         "Habit Profile",
         "Do not expose hidden chain-of-thought",
@@ -34,6 +35,7 @@ REQUIRED = {
     "references/skill-routing.md": [
         "Route Record",
         "Trust Levels",
+        "First-Run Discovery",
         "GitHub Discovery",
         "never auto-install",
     ],
@@ -56,6 +58,7 @@ REQUIRED_SCRIPTS = [
     "eval_routes.py",
     "profile_manager.py",
     "validate_unified_cases.py",
+    "route_with_discovery.py",
 ]
 
 REQUIRED_ASSETS = [

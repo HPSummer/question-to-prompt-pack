@@ -146,6 +146,14 @@ Route from compact metadata first. Do not load every `SKILL.md`.
 
 Use `scripts/build_local_index.py` to build a local compact skill index when needed. Use `scripts/search_skill_index.py` to route a framed task from that index. Use the current session skill list first when it is already available.
 
+For a task category with no good local match, use first-run discovery:
+
+```text
+local installed skills -> local discovery cache -> user-approved GitHub metadata discovery -> review/install guidance
+```
+
+Use `scripts/route_with_discovery.py` for this combined route. GitHub discovery is only for `SKILL.md` metadata and must require user approval/network access. Cache review records in `.question-to-prompt-pack/skill-discovery-cache.json`. After a skill is installed or approved, route from local/cache first and do not repeat GitHub discovery unless the user asks to refresh.
+
 Tiny route:
 
 ```text
@@ -164,6 +172,7 @@ Routing rules:
 - Low confidence: ask one clarification question or answer directly if no skill is needed.
 - Never auto-install or execute untrusted GitHub skills.
 - GitHub discovery is metadata-only review; it is not a permission to install or run remote code.
+- First-run GitHub discovery should guide installation/approval; later runs should use the local index or discovery cache.
 
 ## Feedback Loop
 
