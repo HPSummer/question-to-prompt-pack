@@ -65,6 +65,11 @@ English version: [README.md](README.md)
 
 ## 示例
 
+更多完整示例见：
+
+- [Before / After Demos](examples/before-after.md)
+- [科研用户 profile 示例](examples/researcher-profile.json)
+
 用户输入：
 
 ```text
@@ -189,6 +194,8 @@ python .\question-to-prompt-pack\scripts\profile_manager.py --init --validate
 ```powershell
 python .\question-to-prompt-pack\scripts\validate_unified_cases.py --cases .\benchmarks\unified-cases.jsonl
 ```
+
+当前 benchmark 包含 50 条真实用户风格问题，覆盖科研、代码、写作、PDF、图像、视频、自动化、决策和模糊输入。
 
 ## 许可证
 

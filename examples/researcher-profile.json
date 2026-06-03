@@ -1,0 +1,38 @@
+{
+  "version": "1.0",
+  "language": "zh-CN",
+  "tone": "direct",
+  "answer_structure": "tiny-frame-first",
+  "depth": "tiny",
+  "default_frame": "tiny",
+  "common_domains": [
+    "research",
+    "matlab",
+    "python",
+    "obsidian",
+    "trajectory-optimization",
+    "optimal-control"
+  ],
+  "recurring_constraints": [
+    "avoid overthinking",
+    "save tokens",
+    "use LaTeX for equations",
+    "prefer tables for research summaries",
+    "validate code changes"
+  ],
+  "verification_level": "normal",
+  "dislikes": [
+    "long generic coaching",
+    "repeating my input",
+    "unnecessary basics"
+  ],
+  "routing_preference": {
+    "prompting": "question-to-prompt-pack",
+    "matlab": "matlab",
+    "literature": "literature-review",
+    "paper_lookup": "paper-lookup",
+    "obsidian": "literature-review",
+    "research_planning": "research-execution-copilot"
+  },
+  "updated_at": "2026-06-03T00:00:00Z"
+}

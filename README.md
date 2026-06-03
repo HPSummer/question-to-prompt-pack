@@ -65,6 +65,11 @@ Do not force coaching into ordinary execution requests.
 
 ## Example
 
+More complete examples:
+
+- [Before / After Demos](examples/before-after.md)
+- [Researcher profile example](examples/researcher-profile.json)
+
 User:
 
 ```text
@@ -144,6 +149,9 @@ question-to-prompt-pack/
     validate_unified_cases.py
 benchmarks/
   unified-cases.jsonl
+examples/
+  before-after.md
+  researcher-profile.json
 ```
 
 ## Usage
@@ -168,6 +176,8 @@ Validate the unified benchmark:
 ```powershell
 python .\question-to-prompt-pack\scripts\validate_unified_cases.py --cases .\benchmarks\unified-cases.jsonl
 ```
+
+The benchmark currently includes 50 realistic user-style requests across research, coding, writing, PDF/data, image, video, automation, decision-making, and ambiguous inputs.
 
 ## License
 
