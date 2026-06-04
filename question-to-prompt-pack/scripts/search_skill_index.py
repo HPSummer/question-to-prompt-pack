@@ -9,6 +9,66 @@ from pathlib import Path
 
 WORD_RE = re.compile(r"[A-Za-z0-9_\-\u4e00-\u9fff]+")
 CONFIDENCE_ORDER = {"low": 0, "medium": 1, "high": 2}
+VAGUE_PATTERNS = [
+    "help me with this",
+    "help me",
+    "this thing",
+    "帮我优化",
+    "优化一下",
+    "帮我看看",
+    "这是什么",
+]
+DIRECT_EXECUTION_PATTERNS = [
+    "直接执行",
+    "不要分析",
+    "运行测试",
+    "run tests",
+    "list files",
+    "列出当前目录",
+    "release tag",
+    "管理版本",
+]
+LIGHTWEIGHT_DIRECT_PATTERNS = [
+    "今天的科研任务清单",
+    "今日科研任务清单",
+    "制定今天的科研任务",
+]
+PROMPT_META_PATTERNS = [
+    "训练我的提问",
+    "提问能力",
+    "提示词",
+    "大白话",
+    "默认使用这个 skill",
+    "解释这个 skill",
+    "这个 skill 的意义",
+    "这个 skill 的功能",
+    "测试这个 skill",
+    "展开完整协作框架",
+    "省 token",
+    "最小方案",
+]
+VAGUE_DOMAIN_MARKERS = {
+    "code",
+    "repo",
+    "matlab",
+    "python",
+    "paper",
+    "research",
+    "video",
+    "image",
+    "pdf",
+    "data",
+    "github",
+    "react",
+    "科研",
+    "论文",
+    "文献",
+    "视频",
+    "图片",
+    "图像",
+    "代码",
+    "数据",
+}
 STOPWORDS = {
     "a",
     "an",
@@ -60,6 +120,11 @@ QUERY_ALIASES = {
     "图像": ["image", "figure", "visual"],
     "数据": ["data", "spreadsheet", "database"],
     "写作": ["writing", "draft", "polish"],
+    "投资": ["decision", "risk", "finance"],
+    "决策": ["decision", "risk"],
+    "架构图": ["image", "diagram", "visual"],
+    "知识库": ["research", "notes", "obsidian"],
+    "仿真": ["simulation", "code", "matlab"],
 }
 
 TASK_KEYWORDS = {
@@ -73,17 +138,31 @@ TASK_KEYWORDS = {
         "build",
         "cursor",
         "codex",
+        "github",
         "react",
         "frontend",
         "webapp",
         "web",
         "dashboard",
+        "release",
+        "tag",
+        "version",
+        "upload",
+        "publish",
+        "registry",
+        "router",
+        "design",
         "代码",
         "调试",
         "重构",
         "测试",
         "仓库",
         "开发",
+        "打包",
+        "上传",
+        "发布",
+        "版本",
+        "设计",
     ],
     "research": [
         "research",
@@ -99,10 +178,32 @@ TASK_KEYWORDS = {
         "证据",
         "实验",
     ],
-    "writing": ["write", "edit", "translate", "polish", "document", "draft", "写作", "润色", "翻译", "文档"],
+    "writing": [
+        "write",
+        "edit",
+        "translate",
+        "polish",
+        "document",
+        "draft",
+        "explain",
+        "response",
+        "写作",
+        "润色",
+        "翻译",
+        "文档",
+        "解释",
+        "说明",
+        "回复",
+        "审稿",
+        "审稿人",
+        "修改",
+        "introduction",
+        "abstract",
+    ],
     "video": ["video", "storyboard", "voiceover", "subtitle", "youtube", "视频", "分镜", "旁白", "字幕"],
     "image": ["image", "figure", "plot", "visual", "diagram", "图片", "图像", "绘图", "可视化", "图表"],
     "data": ["data", "spreadsheet", "csv", "database", "pdf", "dataset", "数据", "表格", "数据库"],
+    "decision": ["decision", "decide", "evaluate", "risk", "investment", "tradeoff", "决策", "评估", "投资", "风险", "取舍"],
     "automation": [
         "automation",
         "reminder",
@@ -123,6 +224,8 @@ TASK_KEYWORDS = {
         "定期",
         "发现",
         "检查",
+        "读取",
+        "抓取",
     ],
     "planning": [
         "plan",
@@ -133,6 +236,10 @@ TASK_KEYWORDS = {
         "prompt",
         "question",
         "framing",
+        "default",
+        "usage",
+        "use",
+        "token",
         "规划",
         "计划",
         "决策",
@@ -141,8 +248,17 @@ TASK_KEYWORDS = {
         "提示词",
         "提问",
         "大白话",
+        "默认",
+        "使用",
+        "调用",
+        "展开",
+        "框架",
+        "最小方案",
+        "省",
     ],
 }
+
+TASK_PRIORITY = ["decision", "automation", "coding", "research", "writing", "video", "image", "data", "planning"]
 
 FIELD_WEIGHTS = {
     "name": 4.0,
@@ -185,8 +301,73 @@ def infer_task_type(query: str) -> str:
     hits: dict[str, int] = {}
     for task_type, keywords in TASK_KEYWORDS.items():
         hits[task_type] = sum(1 for word in keywords if word.lower() in expanded)
-    best, count = max(hits.items(), key=lambda item: item[1])
+    lower = query.lower()
+    if "obsidian" in lower or "知识库" in lower:
+        hits["research"] += 3
+    if "pdf" in lower and any(word in lower for word in ["论文", "paper", "文献", "精读", "note", "笔记"]):
+        hits["research"] += 3
+        hits["data"] = max(0, hits["data"] - 1)
+    if any(word in lower for word in ["introduction", "intro", "abstract", "润色", "写", "draft"]):
+        hits["writing"] += 5
+        if any(word in lower for word in ["写", "write", "draft", "introduction", "abstract"]):
+            hits["research"] = max(0, hits["research"] - 1)
+    if any(word in lower for word in ["架构图", "diagram", "figure", "图"]):
+        hits["image"] += 3
+    if any(word in lower for word in ["matlab", "仿真", "simulation", "debug", "脚本", "script"]):
+        hits["coding"] += 2
+    if "github" in lower and any(word in lower for word in ["自动", "读取", "抓取", "发现", "检查", "daily", "weekly"]):
+        hits["automation"] += 3
+    if "github" in lower and any(word in lower for word in ["上传", "发布", "release", "tag", "repo", "仓库", "打包"]):
+        hits["coding"] += 3
+        hits["automation"] = max(0, hits["automation"] - 2)
+    if "skill" in lower and any(word in lower for word in ["解释", "说明", "意义", "功能", "explain"]):
+        hits["writing"] += 4
+        hits["automation"] = max(0, hits["automation"] - 2)
+    if "skill" in lower and any(word in lower for word in ["默认", "使用", "调用", "which", "哪个"]):
+        hits["planning"] += 4
+        hits["automation"] = max(0, hits["automation"] - 2)
+    if "skill" in lower and any(word in lower for word in ["测试", "好用", "默认", "使用", "解释", "意义", "功能"]):
+        hits["planning"] += 3
+        hits["coding"] = max(0, hits["coding"] - 2)
+    if any(word in lower for word in ["审稿", "reviewer response", "回复", "逐条修改"]):
+        hits["writing"] += 4
+    if any(word in lower for word in ["最优控制", "科研", "论文", "文献"]) and any(word in lower for word in ["学习", "路线", "规划"]):
+        hits["research"] += 3
+    if any(word in lower for word in ["省 token", "最小方案", "展开", "协作框架", "默认使用"]):
+        hits["planning"] += 3
+    if any(word in lower for word in ["skill-router", "router-registry", "路由注册", "设计 skill-router"]):
+        hits["coding"] += 5
+    if "release" in lower and "tag" in lower:
+        hits["coding"] += 4
+
+    best, count = max(hits.items(), key=lambda item: (item[1], -TASK_PRIORITY.index(item[0]) if item[0] in TASK_PRIORITY else -99))
     return best if count else "general"
+
+
+def is_under_specified(query: str) -> bool:
+    lower = query.lower().strip()
+    if not lower:
+        return True
+    if not any(pattern in lower for pattern in VAGUE_PATTERNS):
+        return False
+    return not any(marker.lower() in lower for marker in VAGUE_DOMAIN_MARKERS)
+
+
+def is_direct_execution(query: str) -> bool:
+    lower = query.lower()
+    return any(pattern in lower for pattern in DIRECT_EXECUTION_PATTERNS)
+
+
+def is_lightweight_direct_answer(query: str) -> bool:
+    lower = query.lower()
+    return any(pattern in lower for pattern in LIGHTWEIGHT_DIRECT_PATTERNS)
+
+
+def is_prompt_meta_request(query: str) -> bool:
+    lower = query.lower()
+    if any(pattern in lower for pattern in PROMPT_META_PATTERNS):
+        return True
+    return "skill" in lower and any(word in lower for word in ["解释", "意义", "功能", "默认", "怎么用", "测试"])
 
 
 def domain_mismatch_penalty(query: str, record: dict) -> float:
@@ -223,6 +404,11 @@ def route_bonus(query: str, record: dict) -> tuple[float, list[str]]:
         if any(word in lower_query for word in ["审查", "review"]) and "review" in description:
             bonus += 3.0
             matches.append("review-intent")
+
+    if any(word in lower_query for word in ["skill-router", "router-registry"]):
+        if name in {"ai-task-routing", "codex-execution-loop", "codex-task-framing"}:
+            bonus += 8.0
+            matches.append("router-system")
 
     return bonus, matches
 
@@ -317,6 +503,36 @@ def next_action(confidence_value: str, best: dict | None) -> str:
 
 
 def route_payload(query: str, records: list[dict], top: int) -> dict:
+    if is_direct_execution(query) or is_lightweight_direct_answer(query):
+        return {
+            "query": query,
+            "task_type": infer_task_type(query),
+            "best_skill": None,
+            "confidence": "low",
+            "next_action": "execute directly without loading a routing skill",
+            "results": [],
+        }
+
+    if is_prompt_meta_request(query):
+        return {
+            "query": query,
+            "task_type": infer_task_type(query),
+            "best_skill": None,
+            "confidence": "low",
+            "next_action": "answer directly with question-to-prompt-pack; do not load another skill",
+            "results": [],
+        }
+
+    if is_under_specified(query):
+        return {
+            "query": query,
+            "task_type": "general",
+            "best_skill": None,
+            "confidence": "low",
+            "next_action": "ask one clarification question before loading any skill",
+            "results": [],
+        }
+
     ranked = sorted(((score(query, record), record) for record in records), key=lambda item: item[0][0], reverse=True)
     results = []
     for (score_value, matches), record in ranked[:top]:
