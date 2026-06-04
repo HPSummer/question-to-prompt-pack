@@ -1,14 +1,41 @@
 # Question to Prompt Pack
 
-> 一个统一入口：先理解大白话问题，生成简洁提示词包，再判断应该调用哪个 Codex skill。
+> 一个统一入口：先理解大白话问题，生成最小提示词包，再判断应该直接回答、追问、规划，还是调用对应的 Codex skill。
 
-Question to Prompt Pack 是一个 Codex 技能，用来提升用户和 AI 之间的沟通效率。它不是把提示词越写越长，而是帮助 AI 快速判断：应该直接执行、先问问题、展示简洁协作框架、生成完整提示词包，还是路由到最合适的 skill 执行。
+Question to Prompt Pack 是一个 Codex skill，用来提升用户和 AI 的沟通效率。它不是把提示词越写越长，而是帮助 AI 快速判断：应该直接执行、先问一个关键问题、展示简洁协作框架、生成完整提示词包，还是路由到最合适的 skill 执行。
 
 English version: [README.md](README.md)
 
+## 快速效果
+
+用户输入：
+
+```text
+我想做一个个人科研效率工具 MVP，不知道怎么设计。
+```
+
+输出风格：
+
+```text
+我理解为：
+- 目标：设计一个可快速开发和验证的个人科研效率工具
+- 缺失/假设：默认面向个人研究者，包含任务、论文、笔记和周计划
+- 最佳输出：Cursor/Codex 可开发的 PRD
+- 模式：tiny planning + route
+
+提示词包：
+请帮我设计一个个人科研效率工具 MVP，聚焦最小可用流程：科研任务捕获、论文/笔记链接、周计划、进度复盘。请输出 PRD，包括用户故事、核心页面、数据模型、开发阶段和验证标准。
+
+路由：
+- Task type: research/planning
+- Best skill: research-execution-copilot
+- Confidence: medium
+- Next action: 推荐路由，确认后只加载该 skill
+```
+
 ## 设计目标
 
-这个技能的核心规则是：
+核心规则：
 
 ```text
 用最小的框架，避免最大的误解。
@@ -19,7 +46,12 @@ English version: [README.md](README.md)
 ```text
 用户大白话问题
 -> question-to-prompt-pack 对齐意图
--> 内置 skill routing 选择 skill
+-> 生成最小提示词包
+-> 本地已安装 skills 检索
+-> 本地 discovery cache 检索
+-> 首次 GitHub metadata-only 发现
+-> 引导用户审查/安装候选 skill
+-> 后续直接从本地或缓存路由
 -> 对应 skill 执行任务
 -> 反馈结果回到用户偏好/路由策略
 ```
@@ -28,25 +60,47 @@ English version: [README.md](README.md)
 
 - 把自然语言问题转成结构化提示词
 - 避免过度思考和 token 浪费
-- 在执行前展示一个可编辑的理解框架
-- 判断这件事应该调用哪个 skill
+- 在执行前展示可编辑的理解框架
+- 判断这件事是否应该调用某个 skill
 - 用一句可复用模式训练用户下次怎么问
 - 用本地 profile 保留非敏感协作偏好
 - 保留用户原本的大白话风格
-- 根据用户反馈形成当前线程的工作偏好
+- 根据反馈形成当前线程的工作偏好
+
+## 架构图
+
+```mermaid
+flowchart LR
+  A["用户大白话问题"] --> B["question-to-prompt-pack<br/>意图对齐"]
+  B --> C["最小提示词包"]
+  C --> D["本地 skill index"]
+  D --> E{"本地命中足够强?"}
+  E -- 是 --> F["只加载选中的 skill"]
+  E -- 否 --> G["discovery cache"]
+  G --> H{"缓存命中足够强?"}
+  H -- 是 --> F
+  H -- 否 --> I["用户批准的 GitHub<br/>metadata-only 发现"]
+  I --> J["审查 / 安装建议"]
+  J --> K["写入缓存记录"]
+  K --> F
+  F --> L["执行任务"]
+  L --> M["轻量反馈<br/>用户偏好 / 路由策略"]
+```
 
 ## 核心模式
 
-- `Tiny Frame`：默认模式，适合简单请求，省 token
-- `Compact Frame`：用户想检查 AI 如何理解问题时使用
-- `Full Frame`：复杂任务，需要假设、约束和质量标准时使用
-- `Training Frame`：用户想训练提问能力时使用
-- `Skill Route`：需要执行复杂任务时，选择最合适的 skill
-- `Direct Execution`：用户明确说“直接做”时跳过框架
+| 模式 | 使用场景 | Token 策略 |
+|---|---|---|
+| Tiny Frame | 默认模式，普通问题 | 4 个要点 + 1 个提示词 |
+| Compact Frame | 用户想检查 AI 如何理解问题 | 7 个字段，每项一行 |
+| Full Frame | 复杂任务，需要假设、约束和质量标准 | 只在明确需要时展开 |
+| Training Frame | 用户想训练提问能力 | 诊断 + 练习 + 模板 |
+| Skill Route | 任务需要专门 skill 执行 | 只加载 1 个最佳 skill |
+| Direct Execution | 用户明确说“直接做” | 跳过框架，直接执行 |
 
 ## 提问训练闭环
 
-当用户想提升提问能力，或某个问题明显缺少关键上下文时，输出一个很短的训练块：
+只有当用户明确想提升提问能力，或问题明显缺少关键上下文时，才输出一个很短的训练块：
 
 ```text
 提问升级：
@@ -63,44 +117,15 @@ English version: [README.md](README.md)
 
 普通执行请求不会强行教学，避免浪费 token。
 
-## 示例
-
-更多完整示例见：
-
-- [Before / After Demos](examples/before-after.md)
-- [科研用户 profile 示例](examples/researcher-profile.json)
-
-用户输入：
-
-```text
-使用 $question-to-prompt-pack，省 token：
-把这个问题变成更好的提示词：我想规划明天。
-```
-
-理想输出风格：
-
-```text
-我理解为：
-- 目标：制定明天的可执行安排
-- 缺失/假设：默认包含工作、学习和休息
-- 最佳输出：时间块 + 优先级清单
-- 模式：Tiny prompt rewrite
-
-草稿提示词：
-请帮我制定明天的一日计划，包括时间块、最重要的 3 件事、合理休息，以及如果当天被打断时的降级版本。如信息不足，最多先问 3 个问题。
-
-路由：
-- Task type: planning
-- Best skill: none
-- Confidence: high
-- Next action: answer directly
-
-如果想看完整协作框架，请说“展开”。
-```
-
 ## 安装
 
-把技能目录复制到 Codex 的 skills 目录：
+推荐一键安装：
+
+```powershell
+.\install.ps1
+```
+
+手动安装：
 
 ```powershell
 Copy-Item -LiteralPath .\question-to-prompt-pack -Destination "$env:USERPROFILE\.codex\skills\question-to-prompt-pack" -Recurse -Force
@@ -108,79 +133,27 @@ Copy-Item -LiteralPath .\question-to-prompt-pack -Destination "$env:USERPROFILE\
 
 然后重启或刷新 Codex，让技能列表重新加载。
 
-## 校验
+## 使用
 
-运行内置规则检查：
-
-```powershell
-python .\question-to-prompt-pack\scripts\check_skill_rules.py
-```
-
-如果本机有系统技能创建器，也可以运行：
-
-```powershell
-python "$env:USERPROFILE\.codex\skills\.system\skill-creator\scripts\quick_validate.py" .\question-to-prompt-pack
-```
-
-## 目录结构
+最常用：
 
 ```text
-question-to-prompt-pack/
-  SKILL.md
-  agents/openai.yaml
-  references/
-    collaboration-frame.md
-    golden-examples.md
-    interactive-workflow.md
-    prompt-pack-patterns.md
-    question-coaching.md
-    skill-routing.md
-    test-cases.md
-    user-style-profile.md
-  assets/
-    user-style-profile.schema.json
-  scripts/
-    build_local_index.py
-    check_skill_rules.py
-    discover_skill_metadata.py
-    eval_routes.py
-    profile_manager.py
-    search_skill_index.py
-    validate_unified_cases.py
-benchmarks/
-  unified-cases.jsonl
+使用 $question-to-prompt-pack：
+先理解我的需求，生成最小提示词包，判断是否需要调用 skill；能直接做就直接做，避免过度分析。
 ```
 
-## 使用建议
-
-简单问题：
-
-```text
-使用 $question-to-prompt-pack，省 token：
-把这个问题转成更好的提示词：我想安排明天。
-```
-
-需要检查理解：
+检查理解框架：
 
 ```text
 使用 $question-to-prompt-pack：
 请先展示你如何理解我的问题框架，让我调整后再生成最终提示词，并判断应该调用哪个 skill。
 ```
 
-直接执行：
+直接生成最终提示词：
 
 ```text
 使用 $question-to-prompt-pack：
 直接把下面的问题改成最终提示词，不要展示框架。
-```
-
-统一执行入口：
-
-```text
-使用 $question-to-prompt-pack：
-先理解我的需求，再判断应该调用哪个 skill，最后给出最小执行方案。
-
-我想做一个个人科研效率工具 MVP。
 ```
 
 初始化本地用户风格 profile：
@@ -189,13 +162,11 @@ benchmarks/
 python .\question-to-prompt-pack\scripts\profile_manager.py --init --validate
 ```
 
-验证统一链路 benchmark：
+构建本地 skill index：
 
 ```powershell
-python .\question-to-prompt-pack\scripts\validate_unified_cases.py --cases .\benchmarks\unified-cases.jsonl
+python .\question-to-prompt-pack\scripts\build_local_index.py --out skill-index.json
 ```
-
-当前 benchmark 包含 50 条真实用户风格问题，覆盖科研、代码、写作、PDF、图像、视频、自动化、决策和模糊输入。
 
 ## Skill 发现与调用
 
@@ -216,6 +187,55 @@ python .\question-to-prompt-pack\scripts\route_with_discovery.py "build a React 
 ```
 
 发现流程只读取 GitHub 上的 `SKILL.md` metadata，不会自动安装，也不会执行远程代码。用户批准并安装后，后续同类任务优先走本地索引或 `.question-to-prompt-pack/skill-discovery-cache.json`，不需要反复搜索 GitHub。
+
+配置批准的发现源：把 `sources.example.json` 复制为 `.question-to-prompt-pack/sources.json` 后按需修改。
+
+```json
+{
+  "refresh_policy": "weekly",
+  "sources": [
+    {
+      "name": "openai-skills",
+      "url": "https://github.com/openai/skills",
+      "enabled": true,
+      "trust_level": "review"
+    }
+  ]
+}
+```
+
+## Benchmark
+
+验证统一链路 benchmark：
+
+```powershell
+python .\question-to-prompt-pack\scripts\validate_unified_cases.py --cases .\benchmarks\unified-cases.jsonl
+```
+
+当前 benchmark 包含 50 条真实用户风格问题，覆盖科研、代码、写作、PDF/数据、图像、视频、自动化、决策和模糊输入。
+
+| 领域 | 用例数 | 期望行为 |
+|---|---:|---|
+| 提示词框架 | 10 | tiny/compact/full/training 自动选择，不默认长篇展开 |
+| Skill 路由 | 18 | 只有任务需要专门工作流时才路由 |
+| 直接执行 | 8 | 用户要求直接做时跳过框架 |
+| 模糊/高风险 | 8 | 只问一个关键问题或增加验证 |
+| 发现/缓存 | 6 | 本地和缓存优先，GitHub 只做 metadata-only 发现 |
+
+## 目录结构
+
+```text
+question-to-prompt-pack/
+  SKILL.md
+  agents/openai.yaml
+  references/
+  assets/
+  scripts/
+benchmarks/
+  unified-cases.jsonl
+examples/
+  before-after.md
+```
 
 ## 许可证
 

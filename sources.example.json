@@ -1,0 +1,19 @@
+{
+  "refresh_policy": "weekly",
+  "metadata_only": true,
+  "auto_install": false,
+  "sources": [
+    {
+      "name": "openai-skills",
+      "url": "https://github.com/openai/skills",
+      "enabled": true,
+      "trust_level": "review"
+    },
+    {
+      "name": "question-to-prompt-pack",
+      "url": "https://github.com/HPSummer/question-to-prompt-pack",
+      "enabled": true,
+      "trust_level": "review"
+    }
+  ]
+}

@@ -64,7 +64,7 @@ def infer_task_types(description: str) -> list[str]:
             "发现",
             "检查",
         ],
-        "planning": ["plan", "decision", "learning", "task", "roadmap", "规划", "计划", "任务"],
+        "planning": ["plan", "decision", "learning", "task", "roadmap", "规划", "计划", "任务", "提示词", "提问"],
     }
     found = []
     for task_type, words in mapping.items():

@@ -1,10 +1,37 @@
 # Question to Prompt Pack
 
-> One unified entry point: understand a rough question, generate a concise prompt pack, then route the task to the right Codex skill.
+> One unified entry point: understand a rough question, generate the smallest useful prompt pack, then route the task to the right Codex skill when needed.
 
-Question to Prompt Pack is a Codex skill for improving user-AI communication. It does not simply make prompts longer. It helps an AI quickly decide whether to answer directly, ask a clarifying question, show a compact collaboration frame, generate a full prompt pack, or route the task to the best skill for execution.
+Question to Prompt Pack is a Codex skill for improving user-AI communication. It does not simply make prompts longer. It helps an AI quickly decide whether to answer directly, ask one clarifying question, show a compact collaboration frame, generate a prompt pack, or route the task to the best skill for execution.
 
 中文说明见 [README.zh-CN.md](README.zh-CN.md).
+
+## Quick Demo
+
+User:
+
+```text
+I want to build a personal research productivity MVP.
+```
+
+Question to Prompt Pack:
+
+```text
+I understand this as:
+- Goal: design a small research productivity tool users can build and test quickly
+- Missing/assumed context: assume solo researcher, Codex/Cursor development, notes + tasks + papers
+- Best output: PRD-style MVP plan
+- Mode: tiny planning + route
+
+Prompt pack:
+Help me design a personal research productivity tool MVP. Focus on the minimum usable workflow for capturing research tasks, linking papers/notes, planning weekly execution, and reviewing progress. Output a PRD-style plan with user stories, core screens, data model, implementation phases, and validation checks.
+
+Route:
+- Task type: research/planning
+- Best skill: research-execution-copilot
+- Confidence: medium
+- Next action: recommend route, then load selected skill if confirmed
+```
 
 ## Why This Exists
 
@@ -19,7 +46,11 @@ Unified chain:
 ```text
 rough user question
 -> question-to-prompt-pack aligns intent
--> built-in skill routing selects a skill
+-> concise prompt pack
+-> installed local skills
+-> local discovery cache
+-> first-run GitHub metadata-only discovery
+-> review/install guidance
 -> selected skill executes the task
 -> feedback updates prompt/routing preference
 ```
@@ -35,14 +66,36 @@ It helps with:
 - preserving the user's natural style
 - adapting to thread-level preferences through lightweight feedback
 
+## Architecture
+
+```mermaid
+flowchart LR
+  A["Rough user question"] --> B["question-to-prompt-pack<br/>intent frame"]
+  B --> C["Concise prompt pack"]
+  C --> D["Local skill index"]
+  D --> E{"Good local match?"}
+  E -- yes --> F["Load selected skill only"]
+  E -- no --> G["Discovery cache"]
+  G --> H{"Good cached match?"}
+  H -- yes --> F
+  H -- no --> I["User-approved GitHub<br/>metadata-only discovery"]
+  I --> J["Review / install guidance"]
+  J --> K["Cache routing record"]
+  K --> F
+  F --> L["Execute task"]
+  L --> M["Lightweight feedback<br/>profile / route tuning"]
+```
+
 ## Core Behaviors
 
-- `Tiny Frame`: default for simple requests
-- `Compact Frame`: when the user wants to inspect the AI's understanding
-- `Full Frame`: when the task is complex or needs assumptions and quality criteria
-- `Training Frame`: when the user wants coaching on how to ask better
-- `Skill Route`: when a specialized skill should execute the framed task
-- `Direct Execution`: when the user says to just do the task
+| Mode | Use when | Token policy |
+|---|---|---|
+| Tiny Frame | default for ordinary requests | 4 bullets + 1 prompt |
+| Compact Frame | user wants to inspect the AI's understanding | 7 one-line fields |
+| Full Frame | complex task needs assumptions, constraints, and quality criteria | expand only when needed |
+| Training Frame | user wants coaching on how to ask better | diagnosis + exercise + template |
+| Skill Route | specialized workflow should execute the framed task | load one best skill by default |
+| Direct Execution | user says to just do the task | skip framing and execute |
 
 ## Question Coaching Loop
 
@@ -63,44 +116,15 @@ Goal + context + output format + constraints + execution mode
 
 Do not force coaching into ordinary execution requests.
 
-## Example
-
-More complete examples:
-
-- [Before / After Demos](examples/before-after.md)
-- [Researcher profile example](examples/researcher-profile.json)
-
-User:
-
-```text
-Use $question-to-prompt-pack, save tokens:
-Turn this into a better prompt: help me plan tomorrow.
-```
-
-Expected style:
-
-```text
-I understand this as:
-- Goal: create a practical plan for tomorrow
-- Missing/assumed context: assume work + personal tasks
-- Best output: time blocks + top priorities
-- Mode: tiny prompt rewrite
-
-Draft prompt:
-Help me plan tomorrow with time blocks, top 3 priorities, realistic breaks, and a fallback version if the day gets busy. Ask up to 3 questions first only if needed.
-
-Route:
-- Task type: planning
-- Best skill: none
-- Confidence: high
-- Next action: answer directly
-
-Say "expand" if you want the full collaboration frame.
-```
-
 ## Installation
 
-Copy the skill folder into your Codex skills directory:
+Recommended:
+
+```powershell
+.\install.ps1
+```
+
+Manual install:
 
 ```powershell
 Copy-Item -LiteralPath .\question-to-prompt-pack -Destination "$env:USERPROFILE\.codex\skills\question-to-prompt-pack" -Recurse -Force
@@ -108,61 +132,13 @@ Copy-Item -LiteralPath .\question-to-prompt-pack -Destination "$env:USERPROFILE\
 
 Then restart or refresh Codex so the skill list is reloaded.
 
-## Validate
-
-Run the bundled rule check:
-
-```powershell
-python .\question-to-prompt-pack\scripts\check_skill_rules.py
-```
-
-If you have the system skill creator available, also run:
-
-```powershell
-python "$env:USERPROFILE\.codex\skills\.system\skill-creator\scripts\quick_validate.py" .\question-to-prompt-pack
-```
-
-## Repository Layout
-
-```text
-question-to-prompt-pack/
-  SKILL.md
-  agents/openai.yaml
-  references/
-    collaboration-frame.md
-    golden-examples.md
-    interactive-workflow.md
-    prompt-pack-patterns.md
-    question-coaching.md
-    skill-routing.md
-    test-cases.md
-    user-style-profile.md
-  assets/
-    user-style-profile.schema.json
-  scripts/
-    build_local_index.py
-    check_skill_rules.py
-    discover_skill_metadata.py
-    eval_routes.py
-    profile_manager.py
-    search_skill_index.py
-    validate_unified_cases.py
-benchmarks/
-  unified-cases.jsonl
-examples/
-  before-after.md
-  researcher-profile.json
-```
-
 ## Usage
 
 Use it as the only front door:
 
 ```text
 Use $question-to-prompt-pack:
-Understand my rough request, generate a concise prompt pack, choose the best skill, and give the minimum execution plan.
-
-I want to build a personal research productivity MVP.
+Understand my rough request, generate a concise prompt pack, choose the best skill if useful, and avoid overthinking.
 ```
 
 Initialize a local user style profile:
@@ -171,13 +147,29 @@ Initialize a local user style profile:
 python .\question-to-prompt-pack\scripts\profile_manager.py --init --validate
 ```
 
+Build a local skill index:
+
+```powershell
+python .\question-to-prompt-pack\scripts\build_local_index.py --out skill-index.json
+```
+
 Validate the unified benchmark:
 
 ```powershell
 python .\question-to-prompt-pack\scripts\validate_unified_cases.py --cases .\benchmarks\unified-cases.jsonl
 ```
 
+## Routing Benchmark Snapshot
+
 The benchmark currently includes 50 realistic user-style requests across research, coding, writing, PDF/data, image, video, automation, decision-making, and ambiguous inputs.
+
+| Area | Cases | Expected behavior |
+|---|---:|---|
+| Prompt framing | 10 | choose tiny/compact/full/training without over-expansion |
+| Skill routing | 18 | route only when a specialized skill is useful |
+| Direct execution | 8 | skip framing when the request is already clear |
+| Ambiguous/high-risk | 8 | ask one clarification or add verification |
+| Discovery/cache | 6 | use local/cache first, GitHub metadata only after approval |
 
 ## Skill Discovery and Routing
 
@@ -198,6 +190,37 @@ python .\question-to-prompt-pack\scripts\route_with_discovery.py "build a React 
 ```
 
 Discovery reads only GitHub `SKILL.md` metadata. It does not auto-install or execute remote code. After the user approves and installs a skill, later requests use the local index or `.question-to-prompt-pack/skill-discovery-cache.json` instead of repeatedly searching GitHub.
+
+Configure approved discovery sources by copying `sources.example.json` to `.question-to-prompt-pack/sources.json`:
+
+```json
+{
+  "refresh_policy": "weekly",
+  "sources": [
+    {
+      "name": "openai-skills",
+      "url": "https://github.com/openai/skills",
+      "enabled": true,
+      "trust_level": "review"
+    }
+  ]
+}
+```
+
+## Repository Layout
+
+```text
+question-to-prompt-pack/
+  SKILL.md
+  agents/openai.yaml
+  references/
+  assets/
+  scripts/
+benchmarks/
+  unified-cases.jsonl
+examples/
+  before-after.md
+```
 
 ## License
 

@@ -4,47 +4,47 @@
 {"id":"unified-004","query":"帮我把一篇论文整理成 Obsidian 文献笔记","expected_frame":"tiny","expected_task_type":"research","expected_route_required":true,"expected_coaching":"normal","notes":"research artifact should route to literature or note skill"}
 {"id":"unified-005","query":"Fix this bug","expected_frame":"compact","expected_task_type":"coding","expected_route_required":true,"expected_coaching":"normal","notes":"coding task needs repro/context and likely skill route"}
 {"id":"unified-006","query":"直接把下面的问题改成最终提示词，不要展示框架","expected_frame":"direct","expected_task_type":"planning","expected_route_required":false,"expected_coaching":"none","notes":"direct execution override"}
-{"id":"unified-007","query":"训练我的提问能力：我该怎么问 AI 做科研任务规划？","expected_frame":"training","expected_task_type":"research","expected_route_required":false,"expected_coaching":"training","notes":"explicit coaching request"}
+{"id":"unified-007","query":"训练我的提问能力：我应该怎么问 AI 做科研任务规划？","expected_frame":"training","expected_task_type":"research","expected_route_required":false,"expected_coaching":"training","notes":"explicit coaching request"}
 {"id":"unified-008","query":"每天检查 GitHub 上有没有新的 Codex skills","expected_frame":"tiny","expected_task_type":"automation","expected_route_required":true,"expected_coaching":"normal","notes":"automation + discovery should route"}
-{"id":"unified-009","query":"帮我评估这个投资机会","expected_frame":"compact","expected_task_type":"decision","expected_route_required":false,"expected_coaching":"normal","notes":"high-stakes request requires verification and caution"}
-{"id":"unified-010","query":"帮我优化一下","expected_frame":"clarify","expected_task_type":"general","expected_route_required":false,"expected_coaching":"none","notes":"too ambiguous; ask one clarification question"}
-{"id":"unified-011","query":"review this MATLAB control code","expected_frame":"tiny","expected_task_type":"coding","expected_route_required":true,"expected_coaching":"normal","notes":"MATLAB route"}
-{"id":"unified-012","query":"我希望你以后默认中文、简洁、先给 tiny frame，避免过度思考","expected_frame":"tiny","expected_task_type":"planning","expected_route_required":false,"expected_coaching":"none","notes":"profile preference update"}
-{"id":"unified-013","query":"帮我查一下低推力轨迹优化最近有什么重要论文","expected_frame":"tiny","expected_task_type":"research","expected_route_required":true,"expected_coaching":"normal","notes":"paper lookup route"}
-{"id":"unified-014","query":"把这段英文论文摘要润色成 Nature 风格","expected_frame":"tiny","expected_task_type":"writing","expected_route_required":true,"expected_coaching":"normal","notes":"academic polishing route"}
-{"id":"unified-015","query":"帮我从这个 PDF 里提取表格","expected_frame":"tiny","expected_task_type":"data","expected_route_required":true,"expected_coaching":"normal","notes":"PDF extraction route"}
-{"id":"unified-016","query":"生成一张论文用的高质量轨迹优化流程图","expected_frame":"tiny","expected_task_type":"image","expected_route_required":true,"expected_coaching":"normal","notes":"figure/visual route"}
-{"id":"unified-017","query":"帮我做一个讲解 AI 提问能力的视频脚本","expected_frame":"tiny","expected_task_type":"video","expected_route_required":true,"expected_coaching":"normal","notes":"video script route"}
-{"id":"unified-018","query":"我想写一个 Cursor 可以直接开发的 PRD","expected_frame":"tiny","expected_task_type":"coding","expected_route_required":true,"expected_coaching":"normal","notes":"developer PRD route"}
-{"id":"unified-019","query":"给我一个 MATLAB 代码优化建议","expected_frame":"compact","expected_task_type":"coding","expected_route_required":true,"expected_coaching":"normal","notes":"MATLAB optimization needs code/context"}
-{"id":"unified-020","query":"这个公式推导对吗","expected_frame":"clarify","expected_task_type":"research","expected_route_required":false,"expected_coaching":"none","notes":"missing formula context"}
-{"id":"unified-021","query":"帮我把这篇论文做成 PPT","expected_frame":"tiny","expected_task_type":"research","expected_route_required":true,"expected_coaching":"normal","notes":"paper to PPT route"}
-{"id":"unified-022","query":"帮我写一个 GitHub README，让别人愿意 star","expected_frame":"tiny","expected_task_type":"writing","expected_route_required":false,"expected_coaching":"normal","notes":"README writing direct or writing route"}
-{"id":"unified-023","query":"我该怎么问你才能帮我规划博士课题？","expected_frame":"training","expected_task_type":"research","expected_route_required":false,"expected_coaching":"training","notes":"explicit question training"}
-{"id":"unified-024","query":"帮我分析这个实验结果","expected_frame":"clarify","expected_task_type":"research","expected_route_required":false,"expected_coaching":"normal","notes":"missing result/data context"}
-{"id":"unified-025","query":"请帮我生成一个 Python 脚本处理 CSV 数据","expected_frame":"tiny","expected_task_type":"coding","expected_route_required":true,"expected_coaching":"normal","notes":"coding route"}
-{"id":"unified-026","query":"这个仓库 CI 挂了，帮我修","expected_frame":"tiny","expected_task_type":"coding","expected_route_required":true,"expected_coaching":"normal","notes":"GitHub CI route"}
-{"id":"unified-027","query":"扫描这个仓库有没有安全问题","expected_frame":"tiny","expected_task_type":"coding","expected_route_required":true,"expected_coaching":"normal","notes":"security scan route"}
-{"id":"unified-028","query":"帮我建立一个 Obsidian 轨迹优化知识库结构","expected_frame":"tiny","expected_task_type":"research","expected_route_required":true,"expected_coaching":"normal","notes":"research knowledge base route"}
-{"id":"unified-029","query":"我想自动每周总结科研进展","expected_frame":"tiny","expected_task_type":"automation","expected_route_required":true,"expected_coaching":"normal","notes":"weekly automation route"}
-{"id":"unified-030","query":"帮我把这个想法变成一个可执行项目计划","expected_frame":"compact","expected_task_type":"planning","expected_route_required":false,"expected_coaching":"normal","notes":"planning prompt"}
-{"id":"unified-031","query":"翻译这段技术文档，保持术语准确","expected_frame":"tiny","expected_task_type":"writing","expected_route_required":false,"expected_coaching":"none","notes":"translation direct"}
-{"id":"unified-032","query":"帮我选一个优化算法","expected_frame":"compact","expected_task_type":"decision","expected_route_required":false,"expected_coaching":"normal","notes":"decision needs criteria"}
-{"id":"unified-033","query":"做一个 React dashboard 展示我的论文阅读进度","expected_frame":"tiny","expected_task_type":"coding","expected_route_required":true,"expected_coaching":"normal","notes":"frontend app route"}
-{"id":"unified-034","query":"帮我把这个技能上传 GitHub","expected_frame":"tiny","expected_task_type":"coding","expected_route_required":true,"expected_coaching":"normal","notes":"github publishing route"}
-{"id":"unified-035","query":"帮我写一封给导师的邮件","expected_frame":"tiny","expected_task_type":"writing","expected_route_required":false,"expected_coaching":"normal","notes":"email writing direct"}
-{"id":"unified-036","query":"评估这个软件是否值得买","expected_frame":"compact","expected_task_type":"decision","expected_route_required":false,"expected_coaching":"normal","notes":"purchase decision"}
-{"id":"unified-037","query":"帮我做一个文献综述大纲","expected_frame":"tiny","expected_task_type":"research","expected_route_required":true,"expected_coaching":"normal","notes":"literature review route"}
-{"id":"unified-038","query":"我想复现一篇论文，不知道从哪里开始","expected_frame":"compact","expected_task_type":"research","expected_route_required":true,"expected_coaching":"normal","notes":"research reproduction planning"}
-{"id":"unified-039","query":"帮我检查这段 LaTeX 公式有没有格式问题","expected_frame":"tiny","expected_task_type":"writing","expected_route_required":false,"expected_coaching":"none","notes":"LaTeX formatting"}
-{"id":"unified-040","query":"把我的项目拆成今天能完成的任务","expected_frame":"tiny","expected_task_type":"planning","expected_route_required":false,"expected_coaching":"normal","notes":"daily task planning"}
-{"id":"unified-041","query":"我想找一个数据集验证我的方法","expected_frame":"compact","expected_task_type":"research","expected_route_required":true,"expected_coaching":"normal","notes":"dataset search route"}
-{"id":"unified-042","query":"帮我设计一个消融实验","expected_frame":"compact","expected_task_type":"research","expected_route_required":false,"expected_coaching":"normal","notes":"experiment design"}
-{"id":"unified-043","query":"帮我把这个 issue 修掉","expected_frame":"compact","expected_task_type":"coding","expected_route_required":true,"expected_coaching":"normal","notes":"coding issue needs repo context"}
-{"id":"unified-044","query":"给这个函数写单元测试","expected_frame":"tiny","expected_task_type":"coding","expected_route_required":true,"expected_coaching":"normal","notes":"test creation route"}
-{"id":"unified-045","query":"帮我生成一套视频分镜","expected_frame":"tiny","expected_task_type":"video","expected_route_required":true,"expected_coaching":"normal","notes":"storyboard route"}
-{"id":"unified-046","query":"这个结果不好看，帮我改图","expected_frame":"clarify","expected_task_type":"image","expected_route_required":true,"expected_coaching":"normal","notes":"image/plot improvement needs artifact"}
-{"id":"unified-047","query":"请记住我更喜欢表格总结文献","expected_frame":"tiny","expected_task_type":"planning","expected_route_required":false,"expected_coaching":"none","notes":"profile preference"}
-{"id":"unified-048","query":"帮我制定投稿前检查清单","expected_frame":"tiny","expected_task_type":"research","expected_route_required":true,"expected_coaching":"normal","notes":"paper submission checklist"}
-{"id":"unified-049","query":"我想让 AI 每天监督我完成任务","expected_frame":"compact","expected_task_type":"automation","expected_route_required":true,"expected_coaching":"normal","notes":"daily automation planning"}
-{"id":"unified-050","query":"这段话太啰嗦，帮我压缩","expected_frame":"tiny","expected_task_type":"writing","expected_route_required":false,"expected_coaching":"none","notes":"simple editing direct"}
+{"id":"unified-009","query":"帮我做一个讲解视频并加字幕","expected_frame":"tiny","expected_task_type":"video","expected_route_required":true,"expected_coaching":"normal","notes":"video workflow route"}
+{"id":"unified-010","query":"我需要写一篇 Nature 风格论文 introduction","expected_frame":"tiny","expected_task_type":"writing","expected_route_required":true,"expected_coaching":"normal","notes":"specialized scientific writing"}
+{"id":"unified-011","query":"帮我优化一下","expected_frame":"clarify","expected_task_type":"general","expected_route_required":false,"expected_coaching":"normal","notes":"ambiguous optimization"}
+{"id":"unified-012","query":"帮我审查 MATLAB 控制代码","expected_frame":"tiny","expected_task_type":"coding","expected_route_required":true,"expected_coaching":"normal","notes":"MATLAB code review route"}
+{"id":"unified-013","query":"把这段中文润色成高水平英文学术表达","expected_frame":"tiny","expected_task_type":"writing","expected_route_required":true,"expected_coaching":"none","notes":"academic polishing route"}
+{"id":"unified-014","query":"我想做一个 React dashboard","expected_frame":"tiny","expected_task_type":"coding","expected_route_required":true,"expected_coaching":"normal","notes":"frontend coding route"}
+{"id":"unified-015","query":"请直接执行，不要分析：列出当前目录文件","expected_frame":"direct","expected_task_type":"general","expected_route_required":false,"expected_coaching":"none","notes":"direct command"}
+{"id":"unified-016","query":"帮我规划低推力轨迹优化方向的一周科研任务","expected_frame":"tiny","expected_task_type":"research","expected_route_required":true,"expected_coaching":"normal","notes":"domain research planning"}
+{"id":"unified-017","query":"根据这篇 PDF 做中文精读笔记","expected_frame":"tiny","expected_task_type":"research","expected_route_required":true,"expected_coaching":"normal","notes":"PDF + research reading"}
+{"id":"unified-018","query":"生成一张科研系统架构图","expected_frame":"tiny","expected_task_type":"image","expected_route_required":true,"expected_coaching":"normal","notes":"diagram/image route"}
+{"id":"unified-019","query":"帮我做数据表格清洗","expected_frame":"compact","expected_task_type":"data","expected_route_required":true,"expected_coaching":"normal","notes":"data task needs file/context"}
+{"id":"unified-020","query":"我想设置每周提醒我复盘科研进展","expected_frame":"tiny","expected_task_type":"automation","expected_route_required":true,"expected_coaching":"normal","notes":"recurring automation"}
+{"id":"unified-021","query":"帮我评估这个投资机会","expected_frame":"compact","expected_task_type":"decision","expected_route_required":false,"expected_coaching":"normal","notes":"high stakes needs verification"}
+{"id":"unified-022","query":"给我一个可直接给 Cursor 的 PRD","expected_frame":"tiny","expected_task_type":"coding","expected_route_required":false,"expected_coaching":"normal","notes":"prompt/PRD artifact"}
+{"id":"unified-023","query":"我想把 Obsidian 知识库整理一下","expected_frame":"compact","expected_task_type":"research","expected_route_required":true,"expected_coaching":"normal","notes":"research notes management"}
+{"id":"unified-024","query":"帮我找相关论文并整理 citation","expected_frame":"tiny","expected_task_type":"research","expected_route_required":true,"expected_coaching":"normal","notes":"literature + citation"}
+{"id":"unified-025","query":"把我的问题变成提示词强化包","expected_frame":"tiny","expected_task_type":"planning","expected_route_required":false,"expected_coaching":"normal","notes":"core question-to-prompt use"}
+{"id":"unified-026","query":"我要测试这个 skill 是否好用","expected_frame":"compact","expected_task_type":"planning","expected_route_required":false,"expected_coaching":"normal","notes":"skill testing"}
+{"id":"unified-027","query":"帮我把 skill 打包并上传 GitHub","expected_frame":"tiny","expected_task_type":"coding","expected_route_required":true,"expected_coaching":"normal","notes":"repo packaging"}
+{"id":"unified-028","query":"帮我做一个 MATLAB 仿真实验","expected_frame":"compact","expected_task_type":"coding","expected_route_required":true,"expected_coaching":"normal","notes":"MATLAB implementation"}
+{"id":"unified-029","query":"解释这个 skill 的意义和功能","expected_frame":"tiny","expected_task_type":"writing","expected_route_required":false,"expected_coaching":"none","notes":"direct explanation"}
+{"id":"unified-030","query":"怎么默认使用这个 skill","expected_frame":"tiny","expected_task_type":"planning","expected_route_required":false,"expected_coaching":"none","notes":"usage guidance"}
+{"id":"unified-031","query":"做一个 YouTube 视频脚本","expected_frame":"tiny","expected_task_type":"video","expected_route_required":true,"expected_coaching":"normal","notes":"video script"}
+{"id":"unified-032","query":"帮我生成图片封面","expected_frame":"tiny","expected_task_type":"image","expected_route_required":true,"expected_coaching":"normal","notes":"image generation"}
+{"id":"unified-033","query":"帮我写 README 中英文文档","expected_frame":"tiny","expected_task_type":"writing","expected_route_required":false,"expected_coaching":"normal","notes":"documentation"}
+{"id":"unified-034","query":"分析我的提问习惯并保留原有风格","expected_frame":"compact","expected_task_type":"planning","expected_route_required":false,"expected_coaching":"training","notes":"profile + coaching"}
+{"id":"unified-035","query":"帮我设计 skill-router-registry","expected_frame":"tiny","expected_task_type":"coding","expected_route_required":true,"expected_coaching":"normal","notes":"routing system"}
+{"id":"unified-036","query":"我不知道该调用哪个 skill","expected_frame":"tiny","expected_task_type":"planning","expected_route_required":true,"expected_coaching":"normal","notes":"route request"}
+{"id":"unified-037","query":"请节省 token，给最小方案","expected_frame":"tiny","expected_task_type":"planning","expected_route_required":false,"expected_coaching":"none","notes":"token saving"}
+{"id":"unified-038","query":"展开完整协作框架让我调整","expected_frame":"full","expected_task_type":"planning","expected_route_required":false,"expected_coaching":"normal","notes":"explicit full frame"}
+{"id":"unified-039","query":"帮我 debug Python 数据处理脚本","expected_frame":"tiny","expected_task_type":"coding","expected_route_required":true,"expected_coaching":"normal","notes":"Python debug"}
+{"id":"unified-040","query":"把这篇论文做成中文 PPT","expected_frame":"tiny","expected_task_type":"research","expected_route_required":true,"expected_coaching":"normal","notes":"paper to PPT"}
+{"id":"unified-041","query":"做一个自动读取 GitHub 新 skills 的方案","expected_frame":"tiny","expected_task_type":"automation","expected_route_required":true,"expected_coaching":"normal","notes":"discovery automation"}
+{"id":"unified-042","query":"我想学习最优控制，帮我安排路线","expected_frame":"tiny","expected_task_type":"research","expected_route_required":true,"expected_coaching":"normal","notes":"learning roadmap"}
+{"id":"unified-043","query":"帮我把代码性能优化一下","expected_frame":"compact","expected_task_type":"coding","expected_route_required":true,"expected_coaching":"normal","notes":"performance optimization needs code"}
+{"id":"unified-044","query":"这是什么","expected_frame":"clarify","expected_task_type":"general","expected_route_required":false,"expected_coaching":"none","notes":"too ambiguous"}
+{"id":"unified-045","query":"帮我制定今天的科研任务清单","expected_frame":"tiny","expected_task_type":"research","expected_route_required":false,"expected_coaching":"normal","notes":"simple planning no route required"}
+{"id":"unified-046","query":"帮我审稿人回复逐条修改","expected_frame":"tiny","expected_task_type":"writing","expected_route_required":true,"expected_coaching":"normal","notes":"reviewer response"}
+{"id":"unified-047","query":"运行测试并告诉我失败原因","expected_frame":"direct","expected_task_type":"coding","expected_route_required":false,"expected_coaching":"none","notes":"direct code execution"}
+{"id":"unified-048","query":"帮我从图片中提取信息","expected_frame":"compact","expected_task_type":"image","expected_route_required":true,"expected_coaching":"normal","notes":"image understanding"}
+{"id":"unified-049","query":"帮我做一个科研任务自动规划系统","expected_frame":"tiny","expected_task_type":"research","expected_route_required":true,"expected_coaching":"normal","notes":"research productivity system"}
+{"id":"unified-050","query":"发布 release tag 并管理版本","expected_frame":"tiny","expected_task_type":"coding","expected_route_required":false,"expected_coaching":"none","notes":"repo release management"}

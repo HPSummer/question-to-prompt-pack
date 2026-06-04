@@ -61,7 +61,7 @@ def task_types(description: str) -> list[str]:
             "发现",
             "检查",
         ],
-        "planning": ["plan", "decision", "learning", "task", "规划", "任务"],
+        "planning": ["plan", "decision", "learning", "task", "规划", "任务", "提示词", "提问"],
     }
     found = [name for name, words in mapping.items() if any(word in lower for word in words)]
     return found or ["general"]
@@ -108,13 +108,13 @@ def github_api_url(repo_url: str) -> str:
 
 
 def fetch_json(url: str) -> dict:
-    request = urllib.request.Request(url, headers={"Accept": "application/vnd.github+json", "User-Agent": "skill-router-registry"})
+    request = urllib.request.Request(url, headers={"Accept": "application/vnd.github+json", "User-Agent": "question-to-prompt-pack"})
     with urllib.request.urlopen(request, timeout=30) as response:
         return json.loads(response.read().decode("utf-8"))
 
 
 def fetch_text(url: str) -> str:
-    request = urllib.request.Request(url, headers={"User-Agent": "skill-router-registry"})
+    request = urllib.request.Request(url, headers={"User-Agent": "question-to-prompt-pack"})
     with urllib.request.urlopen(request, timeout=30) as response:
         return response.read().decode("utf-8", errors="replace")
 
@@ -155,26 +155,52 @@ def merge_records(existing: list[dict], new_records: list[dict]) -> list[dict]:
     return list(merged.values())
 
 
+def load_sources(path: Path) -> list[dict]:
+    config = json.loads(path.read_text(encoding="utf-8"))
+    sources = config.get("sources", [])
+    if not isinstance(sources, list):
+        raise ValueError("sources must be a list")
+    return [source for source in sources if source.get("enabled", True)]
+
+
+def records_from_sources(config_path: Path, limit: int) -> list[dict]:
+    records: list[dict] = []
+    for source in load_sources(config_path):
+        url = source.get("url")
+        trust_level = source.get("trust_level", "review")
+        if not url:
+            continue
+        parsed = urlparse(url)
+        if parsed.scheme != "https" or parsed.netloc != "github.com":
+            raise ValueError(f"Only https://github.com repository URLs are supported: {url}")
+        records.extend(scan_github(url, trust_level, limit))
+    return records
+
+
 def main() -> int:
     parser = argparse.ArgumentParser(description="Discover SKILL.md metadata without installing or executing skills.")
     parser.add_argument("--repo", help="GitHub repository URL, for example https://github.com/openai/skills")
     parser.add_argument("--path", help="Local directory to scan")
+    parser.add_argument("--sources", help="JSON config with approved GitHub sources")
     parser.add_argument("--out", default="skill-index.review.json")
     parser.add_argument("--merge-index", help="Existing registry JSON to merge with")
     parser.add_argument("--trust-level", choices=["review", "unknown"], default="review")
     parser.add_argument("--limit", type=int, default=100)
     args = parser.parse_args()
 
-    if bool(args.repo) == bool(args.path):
-        raise SystemExit("Provide exactly one of --repo or --path.")
+    modes = [bool(args.repo), bool(args.path), bool(args.sources)]
+    if sum(modes) != 1:
+        raise SystemExit("Provide exactly one of --repo, --path, or --sources.")
 
     if args.repo:
         parsed = urlparse(args.repo)
         if parsed.scheme != "https" or parsed.netloc != "github.com":
             raise SystemExit("Only https://github.com repository URLs are supported.")
         records = scan_github(args.repo, args.trust_level, args.limit)
-    else:
+    elif args.path:
         records = scan_local(Path(args.path), args.trust_level)
+    else:
+        records = records_from_sources(Path(args.sources), args.limit)
 
     if args.merge_index and Path(args.merge_index).exists():
         existing = json.loads(Path(args.merge_index).read_text(encoding="utf-8"))

@@ -53,7 +53,7 @@ Route:
 Before:
 
 ```text
-训练我的提问能力：我该怎么问 AI 做科研任务规划？
+训练我的提问能力：我应该怎么问 AI 做科研任务规划？
 ```
 
 After:
@@ -65,7 +65,7 @@ Question diagnosis:
 - Highest-leverage addition: specify artifact and constraints
 
 Better prompt:
-请作为科研任务规划助手，帮我把“低推力轨迹优化”方向的一周科研任务拆成可执行计划。请输出目标、关键文献/代码任务、每日时间块、验证指标和风险项。默认我使用 MATLAB、Python 和 Obsidian。
+请作为科研任务规划助手，帮我把“低推力轨迹优化”方向的一周科研任务拆成可执行计划。请输出目标、关键文献、代码任务、每日时间块、验证指标和风险项。默认我使用 MATLAB、Python 和 Obsidian。
 
 Reusable pattern:
 研究方向 + 时间尺度 + 输出 artifact + 工具约束 + 验证标准

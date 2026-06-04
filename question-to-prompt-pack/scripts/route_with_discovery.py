@@ -31,6 +31,22 @@ def write_json(path: Path, records: list[dict]) -> None:
     path.write_text(json.dumps(records, ensure_ascii=False, indent=2), encoding="utf-8")
 
 
+def default_sources_path(base: Path) -> Path:
+    return base / ".question-to-prompt-pack" / "sources.json"
+
+
+def read_approved_sources(path: Path) -> list[str]:
+    if not path.exists():
+        return []
+    config = json.loads(path.read_text(encoding="utf-8"))
+    sources = config.get("sources", [])
+    approved = []
+    for source in sources:
+        if source.get("enabled", True) and source.get("url"):
+            approved.append(source["url"])
+    return approved
+
+
 def route_from_records(query: str, records: list[dict], top: int) -> dict:
     return route_payload(query, records, top)
 
@@ -63,6 +79,7 @@ def main() -> int:
     parser.add_argument("--cache")
     parser.add_argument("--base", default=".")
     parser.add_argument("--source", action="append", help="Approved GitHub repo URL. Can be repeated.")
+    parser.add_argument("--sources-config", help="Approved source config. Defaults to .question-to-prompt-pack/sources.json.")
     parser.add_argument("--discover", action="store_true", help="Allow metadata-only GitHub discovery when local/cache route is weak.")
     parser.add_argument("--limit", type=int, default=100)
     parser.add_argument("--top", type=int, default=5)
@@ -79,7 +96,9 @@ def main() -> int:
     discovered = []
 
     if args.discover and should_discover(route, args.min_confidence):
-        sources = args.source or DEFAULT_SOURCES
+        sources_config = Path(args.sources_config) if args.sources_config else default_sources_path(base)
+        configured_sources = read_approved_sources(sources_config)
+        sources = args.source or configured_sources or DEFAULT_SOURCES
         for source in sources:
             try:
                 discovered.extend(scan_github(source, "review", args.limit))
