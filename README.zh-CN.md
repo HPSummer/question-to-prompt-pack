@@ -67,6 +67,16 @@ English version: [README.md](README.md)
 - 保留用户原本的大白话风格
 - 根据反馈形成当前线程的工作偏好
 
+## 为什么值得安装
+
+| 常见问题 | 这个 skill 的处理方式 |
+|---|---|
+| 提示词越改越长 | 默认 tiny frame，只在需要时展开 |
+| AI 容易误解模糊需求 | 明确目标、缺失上下文、输出形态和执行模式 |
+| skills 太多不知道用哪个 | 先查紧凑 metadata，默认只加载 1 个最佳 skill |
+| GitHub skill 发现有安全顾虑 | 只读取 `SKILL.md` metadata，不自动安装、不执行远程代码 |
+| 想让别人信任和复用 | 提供 examples、benchmark 和 CI 质量检查 |
+
 ## 架构图
 
 ```mermaid
@@ -168,6 +178,12 @@ python .\question-to-prompt-pack\scripts\profile_manager.py --init --validate
 python .\question-to-prompt-pack\scripts\build_local_index.py --out skill-index.json
 ```
 
+运行完整质量检查：
+
+```powershell
+python .\question-to-prompt-pack\scripts\run_quality_checks.py --repo-root .
+```
+
 ## Skill 发现与调用
 
 默认路由顺序：
@@ -222,6 +238,19 @@ python .\question-to-prompt-pack\scripts\validate_unified_cases.py --cases .\ben
 | 模糊/高风险 | 8 | 只问一个关键问题或增加验证 |
 | 发现/缓存 | 6 | 本地和缓存优先，GitHub 只做 metadata-only 发现 |
 
+## 推广和演示材料
+
+- [examples/before-after.md](examples/before-after.md)：真实 before/after 示例
+- [examples/promotion-copy.md](examples/promotion-copy.md)：30 秒介绍、一句话简介、发布文案
+
+推荐演示输入：
+
+```text
+使用 $question-to-prompt-pack：我想做一个个人科研效率工具 MVP。
+使用 $question-to-prompt-pack：帮我判断这个任务该调用哪个 Codex skill。
+使用 $question-to-prompt-pack：训练我做科研任务规划时的提问能力。
+```
+
 ## 目录结构
 
 ```text
@@ -235,7 +264,12 @@ benchmarks/
   unified-cases.jsonl
 examples/
   before-after.md
+  promotion-copy.md
 ```
+
+## 参与贡献
+
+见 [CONTRIBUTING.md](CONTRIBUTING.md)。原则很简单：`SKILL.md` 保持小而清晰，细节放到 `references/`，路由策略变更要补 benchmark，用 PR 前先运行 `run_quality_checks.py`。
 
 ## 许可证
 

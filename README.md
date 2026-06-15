@@ -66,6 +66,16 @@ It helps with:
 - preserving the user's natural style
 - adapting to thread-level preferences through lightweight feedback
 
+## Why People Adopt It
+
+| Problem | What this skill does |
+|---|---|
+| Prompt rewrites become too long | Starts with a tiny frame and expands only when needed |
+| AI misunderstands vague requests | Makes goal, missing context, output, and mode visible |
+| Too many skills are installed | Routes from compact metadata and loads one skill by default |
+| Remote skill discovery feels risky | Reads GitHub `SKILL.md` metadata only and never auto-installs |
+| Teams need repeatable behavior | Ships examples, benchmark cases, and CI-friendly validation |
+
 ## Architecture
 
 ```mermaid
@@ -159,6 +169,12 @@ Validate the unified benchmark:
 python .\question-to-prompt-pack\scripts\validate_unified_cases.py --cases .\benchmarks\unified-cases.jsonl
 ```
 
+Run all repository quality checks:
+
+```powershell
+python .\question-to-prompt-pack\scripts\run_quality_checks.py --repo-root .
+```
+
 ## Routing Benchmark Snapshot
 
 The benchmark currently includes 50 realistic user-style requests across research, coding, writing, PDF/data, image, video, automation, decision-making, and ambiguous inputs.
@@ -170,6 +186,18 @@ The benchmark currently includes 50 realistic user-style requests across researc
 | Direct execution | 8 | skip framing when the request is already clear |
 | Ambiguous/high-risk | 8 | ask one clarification or add verification |
 | Discovery/cache | 6 | use local/cache first, GitHub metadata only after approval |
+
+## Promotion and Demos
+
+Use [examples/before-after.md](examples/before-after.md) for realistic transformations and [examples/promotion-copy.md](examples/promotion-copy.md) for a 30-second pitch, one-line description, and launch copy.
+
+Good demo prompts:
+
+```text
+Use $question-to-prompt-pack: I want to build a personal research productivity MVP.
+Use $question-to-prompt-pack: Help me decide which Codex skill should handle this task.
+Use $question-to-prompt-pack: Train my questioning ability for research planning.
+```
 
 ## Skill Discovery and Routing
 
@@ -220,7 +248,12 @@ benchmarks/
   unified-cases.jsonl
 examples/
   before-after.md
+  promotion-copy.md
 ```
+
+## Contributing
+
+See [CONTRIBUTING.md](CONTRIBUTING.md). The short version: keep `SKILL.md` small, put detailed guidance in `references/`, add benchmark cases for routing changes, and run `run_quality_checks.py` before a PR.
 
 ## License
 

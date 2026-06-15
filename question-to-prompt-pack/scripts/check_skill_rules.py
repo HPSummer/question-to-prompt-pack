@@ -49,6 +49,11 @@ REQUIRED = {
         "Profile Location",
         "Update Rules",
     ],
+    "references/release-management.md": [
+        "Release Readiness Checklist",
+        "Versioning",
+        "Promotion Checklist",
+    ],
 }
 
 REQUIRED_SCRIPTS = [
@@ -59,6 +64,7 @@ REQUIRED_SCRIPTS = [
     "profile_manager.py",
     "validate_unified_cases.py",
     "route_with_discovery.py",
+    "run_quality_checks.py",
 ]
 
 REQUIRED_ASSETS = [

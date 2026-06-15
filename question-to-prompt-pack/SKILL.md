@@ -255,10 +255,11 @@ Use `assets/user-style-profile.schema.json` as the schema. Store only non-sensit
 
 ## References
 
-- `references/collaboration-frame.md`: templates, confidence, trigger table.
-- `references/interactive-workflow.md`: user adjustments, habit updates, feedback menu.
-- `references/prompt-pack-patterns.md`: full prompt pack patterns and domain adaptors.
-- `references/golden-examples.md`: style anchors for validation/debugging only.
-- `references/skill-routing.md`: routing policy, trust model, and discovery workflow.
-- `references/question-coaching.md`: reusable question-improvement patterns.
-- `references/user-style-profile.md`: persistent non-sensitive style profile rules.
+- `references/collaboration-frame.md`: templates, confidence, triggers.
+- `references/interactive-workflow.md`: adjustments, habit updates, feedback.
+- `references/prompt-pack-patterns.md`: full patterns and domain adaptors.
+- `references/golden-examples.md`: validation/debugging style anchors.
+- `references/skill-routing.md`: routing policy, trust, discovery.
+- `references/question-coaching.md`: question-improvement patterns.
+- `references/user-style-profile.md`: local non-sensitive profile rules.
+- `references/release-management.md`: GitHub promotion and release checklist.
