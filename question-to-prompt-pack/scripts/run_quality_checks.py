@@ -77,9 +77,11 @@ def main() -> int:
         assert_text_contains(
             repo_root / "README.md",
             [
+                "3-Minute Quick Start",
                 "metadata-only",
                 "Routing Benchmark Snapshot",
                 "Skill Discovery and Routing",
+                "adoption-playbook.md",
             ],
         )
     )
@@ -87,9 +89,31 @@ def main() -> int:
         assert_text_contains(
             repo_root / "README.zh-CN.md",
             [
+                "3 分钟快速开始",
                 "metadata-only",
                 "Benchmark",
                 "Skill 发现与调用",
+                "adoption-playbook.md",
+            ],
+        )
+    )
+    structural_problems.extend(
+        assert_text_contains(
+            repo_root / "docs" / "adoption-playbook.md",
+            [
+                "7-Day Promotion Plan",
+                "Post Templates",
+                "Success Metrics",
+            ],
+        )
+    )
+    structural_problems.extend(
+        assert_text_contains(
+            repo_root / "examples" / "promotion-copy.md",
+            [
+                "Taglines",
+                "Short Launch Post",
+                "Chinese Taglines",
             ],
         )
     )
