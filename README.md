@@ -2,6 +2,8 @@
 
 > One unified entry point: understand a rough question, generate the smallest useful prompt pack, then route the task to the right Codex skill when needed.
 
+[![Validate skill](https://github.com/HPSummer/question-to-prompt-pack/actions/workflows/validate.yml/badge.svg)](https://github.com/HPSummer/question-to-prompt-pack/actions/workflows/validate.yml)
+
 Question to Prompt Pack is a Codex skill for improving user-AI communication. It does not simply make prompts longer. It helps an AI quickly decide whether to answer directly, ask one clarifying question, show a compact collaboration frame, generate a prompt pack, or route the task to the best skill for execution.
 
 中文说明见 [README.zh-CN.md](README.zh-CN.md).
@@ -66,6 +68,27 @@ It helps with:
 - preserving the user's natural style
 - adapting to thread-level preferences through lightweight feedback
 
+## 3-Minute Quick Start
+
+```powershell
+git clone https://github.com/HPSummer/question-to-prompt-pack.git
+cd question-to-prompt-pack
+.\install.ps1
+```
+
+Restart or refresh Codex, then try:
+
+```text
+Use $question-to-prompt-pack:
+I want to build a personal research productivity MVP, but I do not know how to structure the task.
+```
+
+Verify the package:
+
+```powershell
+python .\question-to-prompt-pack\scripts\run_quality_checks.py --repo-root .
+```
+
 ## Why People Adopt It
 
 | Problem | What this skill does |
@@ -75,6 +98,15 @@ It helps with:
 | Too many skills are installed | Routes from compact metadata and loads one skill by default |
 | Remote skill discovery feels risky | Reads GitHub `SKILL.md` metadata only and never auto-installs |
 | Teams need repeatable behavior | Ships examples, benchmark cases, and CI-friendly validation |
+
+## Who It Is For
+
+| User | Best first use |
+|---|---|
+| Researchers and students | Turn rough research ideas into executable plans and prompts |
+| Codex/Cursor power users | Decide which skill should handle a task |
+| Skill authors | Add benchmark cases and validate routing behavior |
+| Teams experimenting with AI workflows | Standardize safe prompt framing and skill discovery |
 
 ## Architecture
 
@@ -190,6 +222,7 @@ The benchmark currently includes 50 realistic user-style requests across researc
 ## Promotion and Demos
 
 Use [examples/before-after.md](examples/before-after.md) for realistic transformations and [examples/promotion-copy.md](examples/promotion-copy.md) for a 30-second pitch, one-line description, and launch copy.
+Use [docs/adoption-playbook.md](docs/adoption-playbook.md) for launch positioning, post templates, and a 7-day promotion plan.
 
 Good demo prompts:
 
@@ -249,6 +282,9 @@ benchmarks/
 examples/
   before-after.md
   promotion-copy.md
+docs/
+  adoption-playbook.md
+  release-notes-v0.8.0.md
 ```
 
 ## Contributing
