@@ -2,6 +2,8 @@
 
 > 一个统一入口：先理解大白话问题，生成最小提示词包，再判断应该直接回答、追问、规划，还是调用对应的 Codex skill。
 
+[![Validate skill](https://github.com/HPSummer/question-to-prompt-pack/actions/workflows/validate.yml/badge.svg)](https://github.com/HPSummer/question-to-prompt-pack/actions/workflows/validate.yml)
+
 Question to Prompt Pack 是一个 Codex skill，用来提升用户和 AI 的沟通效率。它不是把提示词越写越长，而是帮助 AI 快速判断：应该直接执行、先问一个关键问题、展示简洁协作框架、生成完整提示词包，还是路由到最合适的 skill 执行。
 
 English version: [README.md](README.md)
@@ -67,6 +69,27 @@ English version: [README.md](README.md)
 - 保留用户原本的大白话风格
 - 根据反馈形成当前线程的工作偏好
 
+## 3 分钟快速开始
+
+```powershell
+git clone https://github.com/HPSummer/question-to-prompt-pack.git
+cd question-to-prompt-pack
+.\install.ps1
+```
+
+重启或刷新 Codex，然后试：
+
+```text
+使用 $question-to-prompt-pack：
+我想做一个个人科研效率工具 MVP，不知道怎么设计。
+```
+
+验证安装包：
+
+```powershell
+python .\question-to-prompt-pack\scripts\run_quality_checks.py --repo-root .
+```
+
 ## 为什么值得安装
 
 | 常见问题 | 这个 skill 的处理方式 |
@@ -76,6 +99,15 @@ English version: [README.md](README.md)
 | skills 太多不知道用哪个 | 先查紧凑 metadata，默认只加载 1 个最佳 skill |
 | GitHub skill 发现有安全顾虑 | 只读取 `SKILL.md` metadata，不自动安装、不执行远程代码 |
 | 想让别人信任和复用 | 提供 examples、benchmark 和 CI 质量检查 |
+
+## 适合谁
+
+| 用户 | 第一个使用场景 |
+|---|---|
+| 科研学生/研究者 | 把粗糙科研想法转成可执行计划和提示词 |
+| Codex/Cursor 重度用户 | 判断一个任务该交给哪个 skill |
+| skill 作者 | 增加 benchmark，并验证路由行为 |
+| 正在测试 AI workflow 的团队 | 统一安全的 prompt framing 和 skill discovery |
 
 ## 架构图
 
@@ -242,6 +274,7 @@ python .\question-to-prompt-pack\scripts\validate_unified_cases.py --cases .\ben
 
 - [examples/before-after.md](examples/before-after.md)：真实 before/after 示例
 - [examples/promotion-copy.md](examples/promotion-copy.md)：30 秒介绍、一句话简介、发布文案
+- [docs/adoption-playbook.md](docs/adoption-playbook.md)：定位、发布模板、7 天推广计划
 
 推荐演示输入：
 
@@ -265,6 +298,9 @@ benchmarks/
 examples/
   before-after.md
   promotion-copy.md
+docs/
+  adoption-playbook.md
+  release-notes-v0.8.0.md
 ```
 
 ## 参与贡献
