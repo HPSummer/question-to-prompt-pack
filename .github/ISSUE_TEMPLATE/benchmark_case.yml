@@ -1,0 +1,57 @@
+name: Add a benchmark case
+description: Suggest a realistic user request for the unified benchmark.
+title: "Benchmark case: "
+labels: ["benchmark", "routing"]
+body:
+  - type: textarea
+    id: query
+    attributes:
+      label: User request
+      description: Paste the rough request exactly as a user would write it.
+      placeholder: "Use $question-to-prompt-pack: help me plan my research week"
+    validations:
+      required: true
+  - type: dropdown
+    id: frame
+    attributes:
+      label: Expected frame
+      options:
+        - tiny
+        - compact
+        - full
+        - training
+        - direct
+        - clarify
+    validations:
+      required: true
+  - type: dropdown
+    id: task_type
+    attributes:
+      label: Expected task type
+      options:
+        - automation
+        - coding
+        - data
+        - decision
+        - general
+        - image
+        - planning
+        - research
+        - video
+        - writing
+    validations:
+      required: true
+  - type: dropdown
+    id: route_required
+    attributes:
+      label: Should this route to another skill?
+      options:
+        - "true"
+        - "false"
+    validations:
+      required: true
+  - type: textarea
+    id: notes
+    attributes:
+      label: Notes
+      description: Explain why this behavior is expected.
