@@ -56,3 +56,5 @@ v0.1.0
 - Link to before/after examples instead of explaining every mode.
 - Mention the trust model: local first, cache second, GitHub metadata-only after approval.
 - Show the quality command so users can verify the package themselves.
+- Add GitHub topics: `codex`, `skills`, `prompt-engineering`, `ai-workflow`, `routing`.
+- Ask users to contribute benchmark cases through the GitHub issue template.
