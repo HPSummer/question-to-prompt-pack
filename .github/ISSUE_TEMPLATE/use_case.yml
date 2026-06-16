@@ -1,0 +1,31 @@
+name: Share a use case
+description: Tell us how you used Question to Prompt Pack.
+title: "Use case: "
+labels: ["use-case"]
+body:
+  - type: textarea
+    id: context
+    attributes:
+      label: Context
+      description: Who used it and for what kind of task?
+    validations:
+      required: true
+  - type: textarea
+    id: before
+    attributes:
+      label: Before
+      description: What rough request did you start with?
+    validations:
+      required: true
+  - type: textarea
+    id: after
+    attributes:
+      label: After
+      description: What did the skill produce or route to?
+    validations:
+      required: true
+  - type: textarea
+    id: improvement
+    attributes:
+      label: What should improve?
+      description: Was anything too long, too shallow, confusing, or missing?
